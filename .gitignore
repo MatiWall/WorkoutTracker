@@ -1,0 +1,67 @@
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+.idea/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer files (on non-Windows systems)
+*.vsix
+
+# .NET Core
+.project.json
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# .NET SDK
+bin/
+obj/
+packages/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Build Results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Dd]ebugFinal/
+[Dd]ebug-AnyCPU/
+[Dd]ebug-x64/
+[Dd]ebug-x86/
+[Dd]ebug-AnyCPU-Release/
+[Dd]ebug-x64-Release/
+[Dd]ebug-x86-Release/
+[Dd]ebug-Release/
+[Dd]ebug-docker/
+
+[Dd]ist/
+*.tar.gz
+*.zip
+*.7z
+
+# .NET Core tools
+.vs2019/
+.vscode/
+
+# User-specific files for JetBrains Rider (IDE)
+.idea/
+
+# VS Code
+.vscode/
+
+# Build directories
+node_modules/
+bower_components/
+
+# ASP.NET Core
+wwwroot/
