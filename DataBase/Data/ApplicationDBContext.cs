@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Models = DataBase.Models;
 
 public class ApplicationDBContext : DbContext {
-    public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options)
-        : base(options)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        optionsBuilder.UseInMemoryDatabase("MyTestDB");
     }
     public DbSet<Models.Set> FactSet {get; set;}
     public DbSet<Models.DimProgram> DimProgram {get;set;}
