@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.EntityFrameworkCore;
-using Models = DataBase.Models;
+using WorkoutTracker.DataBase.Models;
 
 /*
 class Program {
@@ -52,7 +52,7 @@ using (var scope = app.Services.CreateScope())
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
         //context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
-        var exercise = new Models.DimExercise{
+        var exercise = new DimExercise{
                Name="Standing Biceps Curls" 
             };
 

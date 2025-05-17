@@ -1,5 +1,5 @@
 
-namespace DataBase.Models {
+namespace WorkoutTracker.DataBase.Models {
 
     public class Set {
 

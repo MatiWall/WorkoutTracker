@@ -1,4 +1,4 @@
-namespace DataBase.Models {
+namespace WorkoutTracker.DataBase.Models {
 
    public class DimProgram{
         public int ID {get;set;}
