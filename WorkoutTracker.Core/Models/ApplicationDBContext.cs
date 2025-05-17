@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
+using WorkoutTracker.Core.Models;
+
 namespace WorkoutTracker.DataBase.Models
 {
     public class ApplicationDBContext : DbContext

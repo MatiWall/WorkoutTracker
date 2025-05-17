@@ -1,8 +1,8 @@
-namespace WorkoutTracker.DataBase.Models {
+namespace WorkoutTracker.Core.Models {
 
     public class DimMuscleGroup {
 
-        public int ID {get;set;}
+        public string ID {get;set;}
         public required string Name {set; get;}
 
     }

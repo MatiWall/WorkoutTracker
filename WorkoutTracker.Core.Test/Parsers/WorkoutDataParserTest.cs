@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http;
-using WorkoutTracker.API.Parsers;
+using WorkoutTracker.Core.Parsers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,15 +21,10 @@ public class WorkoutDataParserTest
         // Arrange
         var filePath = @"C:\Users\MatiW\Documents\projects\WorkoutTracker\StrengthLog-2023-06-201.csv";
         using var fileStream = File.OpenRead(filePath);
-        var formFile = new FormFile(fileStream, 0, fileStream.Length, "file", Path.GetFileName(filePath))
-        {
-            Headers = new HeaderDictionary(),
-            ContentType = "text/csv"
-        };
         var parser = new WorkoutDataParser();
 
         // Act
-        parser.ParseWorkoutData(formFile);
+        parser.ParseWorkoutData(fileStream);
 
         // Assert
         // Output will be visible in the test results

@@ -1,9 +1,9 @@
 
-namespace WorkoutTracker.DataBase.Models {
+namespace WorkoutTracker.Core.Models {
 
     public class Set {
 
-        public int ID {get; set;}
+        public string ID {get; set;}
 
         public required int WorkoutID {get; set;}
         public required int ExerciseID {get; set;}
