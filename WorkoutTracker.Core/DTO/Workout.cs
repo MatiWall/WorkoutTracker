@@ -4,31 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using WorkoutTracker.Core.Models;
 
 namespace WorkoutTracker.Core.DTO;
 
-internal class WorkoutContainer
+public class Workout
 {
 
-    public Workout? Workout { get; set; }
-    public Set[]? Sets { get; set; }
+    public string ProgramName { get; set; } = string.Empty;
 
-    public WorkoutContainer(Workout workout, Set[] sets)
+    public string WorkoutName { get; set; } = string.Empty;
+
+    public DateTime Date { get; set; } = DateTime.MinValue;
+    public Set[]? Sets { get; set; } = Array.Empty<Set>();
+
+    public Workout(string ProgramName, string WorkoutName, DateTime Date, Set[] Sets)
     {
-        Workout = workout;
-        Sets = sets;
+        this.ProgramName = ProgramName;
+        this.WorkoutName = WorkoutName;
+        this.Date = Date;
+        this.Sets = Sets;
     }
 
-}
-
-internal class SetContainer
-{
-    public Set? Set { get; set; }
-    public DimExercise[]? Exercises { get; set; }
-    public SetContainer(Set set, DimExercise[] exercises)
-    {
-        Set = set;
-        Exercises = exercises;
-    }
 }

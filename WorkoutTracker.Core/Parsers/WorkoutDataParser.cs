@@ -2,43 +2,48 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 using WorkoutTracker.Core.DTO;
-using WorkoutTracker.Core.Models;
 
 namespace WorkoutTracker.Core.Parsers;
 
 public interface IWorkoutDataParser
 {
-    void ParseWorkoutData(Stream fileSteam);
+    public Workout[] ParseWorkoutData(Stream fileSteam);
 }
 
 public class WorkoutDataParser : IWorkoutDataParser
 {
    
-    public void ParseWorkoutData(Stream fileStream)
-    {
+    public Workout[] ParseWorkoutData(Stream fileStream)
+    {   
+
         string[] workouts = FindWorkouts(fileStream);
 
-        WorkoutContainer[] workoutContainers = {};
+        Workout[] Workouts = Array.Empty<Workout>();
 
         foreach (var workout in workouts)
         {
-            WorkoutContainer parsedWorkout = ParseWorkout(workout);
+            Workout parsedWorkout = ParseWorkout(workout);
          
         }
 
-
+        return Workouts;
     }
 
-    internal WorkoutContainer ParseWorkout(string workout)
+    internal Workout ParseWorkout(string workout)
     {
 
         var (metadata, sets) = SplitWorkout(workout);
 
         (string ProgramName, string WorkoutName, DateTime Date) = ParseWorkoutMetadata(metadata);
 
+        Workout workoutParsed = new(
+            ProgramName: ProgramName,
+            WorkoutName: WorkoutName,
+            Date: Date,
+            Sets: ParseSets(sets)
+        );
 
-
-        return "string";
+        return workoutParsed;
     }
 
     internal static (string ProgramName, string WorkoutName, DateTime Date) ParseWorkoutMetadata(string metadata)
@@ -71,8 +76,6 @@ public class WorkoutDataParser : IWorkoutDataParser
         return (metadata, sets);
     }
 
-    internal string[] ParseWorkoutMetadata(string workout){
-    }
 
     internal string[] FindWorkouts(Stream fileStream){
 
@@ -111,5 +114,24 @@ public class WorkoutDataParser : IWorkoutDataParser
         if (lines.Length <= 1)
             return string.Empty;
         return string.Join(Environment.NewLine, lines.Skip(1));
+    }
+
+
+    internal static Set[] ParseSets(string sets)
+    {
+        var setLines = sets.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+        var parsedSets = new List<Set>();
+        foreach (var line in setLines)
+        {
+            var parts = line.Split(',');
+            if (parts.Length < 4)
+                throw new ArgumentException("Invalid set format. Expected 'ExerciseName,SetNR,Repetitions,Weight' format.");
+            string exerciseName = parts[0].Trim();
+            int setNR = int.Parse(parts[1].Trim());
+            int repetitions = int.Parse(parts[2].Trim());
+            float weight = float.Parse(parts[3].Trim());
+            parsedSets.Add(new Set(exerciseName, setNR, repetitions, weight));
+        }
+        return parsedSets.ToArray();
     }
 }

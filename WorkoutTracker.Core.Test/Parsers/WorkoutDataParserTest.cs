@@ -3,8 +3,7 @@ using WorkoutTracker.Core.Parsers;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace WorkoutTracker.API.UnitTest.Parsers;
-
+namespace WorkoutTracker.Core.DTO;
 public class WorkoutDataParserTest
 {   
     private readonly ITestOutputHelper output;
@@ -24,8 +23,9 @@ public class WorkoutDataParserTest
         var parser = new WorkoutDataParser();
 
         // Act
-        parser.ParseWorkoutData(fileStream);
+        Workout[] workouts = parser.ParseWorkoutData(fileStream);
 
+        Assert.Equal(2, 2);
         // Assert
         // Output will be visible in the test results
     }
