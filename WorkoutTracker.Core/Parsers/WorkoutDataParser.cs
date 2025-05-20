@@ -1,7 +1,10 @@
+using Microsoft.Extensions.Logging;
 using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using WorkoutTracker.Core.DTO;
+using WorkoutTracker.Core.Parsers;
 
 namespace WorkoutTracker.Core.Parsers;
 
@@ -12,58 +15,49 @@ public interface IWorkoutDataParser
 
 public class WorkoutDataParser : IWorkoutDataParser
 {
-   
+
     public Workout[] ParseWorkoutData(Stream fileStream)
-    {   
+    {
 
         string[] workouts = FindWorkouts(fileStream);
 
-        Workout[] Workouts = Array.Empty<Workout>();
+        List<Workout> Workouts = new List<Workout>();
 
         foreach (var workout in workouts)
         {
+           
             Workout parsedWorkout = ParseWorkout(workout);
+            if (parsedWorkout == null)
+            {
+                continue;
+            }
+            Workouts.Add(parsedWorkout);
+            
+          
          
         }
 
-        return Workouts;
+        return Workouts.ToArray();
     }
 
-    internal Workout ParseWorkout(string workout)
+    internal Workout? ParseWorkout(string workout)
     {
 
         var (metadata, sets) = SplitWorkout(workout);
 
-        (string ProgramName, string WorkoutName, DateTime Date) = ParseWorkoutMetadata(metadata);
+        WorkoutMetadata? workoutMetadata = WorkoutMetadata.ParseMetadata(metadata);
+
+        if (workoutMetadata == null)
+        {
+            return null;
+        }
 
         Workout workoutParsed = new(
-            ProgramName: ProgramName,
-            WorkoutName: WorkoutName,
-            Date: Date,
+            Metadata: workoutMetadata,
             Sets: ParseSets(sets)
         );
 
         return workoutParsed;
-    }
-
-    internal static (string ProgramName, string WorkoutName, DateTime Date) ParseWorkoutMetadata(string metadata)
-    {
-        var colonIndex = metadata.IndexOf(':');
-        if (colonIndex == -1)
-            throw new ArgumentException("Invalid metadata format. Expected 'Program:Workout' format.");
-        string programName = metadata.Substring(0, colonIndex).Trim();
-
-
-        string rest = metadata.Substring(colonIndex + 1).Trim();
-
-        var parts = rest.Split(',');
-
-
-        var workoutName = parts[0];
-        var date = DateTime.Parse(parts[1].Trim());
-
-  
-        return (programName, workoutName, date);
     }
 
     internal static (string Metadata, string Sets) SplitWorkout(string workout)
@@ -79,33 +73,32 @@ public class WorkoutDataParser : IWorkoutDataParser
 
     internal string[] FindWorkouts(Stream fileStream){
 
-        var workouts = new StringBuilder();
-        bool isInWorkouts = false;
+        string keyword = "Workouts";
+
+        string fileContent;
 
         using (var reader = new StreamReader(fileStream))
         {
-            string? line;
-            while ((line = reader.ReadLine()) != null)
-            {
-                if (!isInWorkouts)
-                {
-                    if (line.Contains("Workouts"))
-                    {
-                        isInWorkouts = true;
-                    }
-                    continue; // Skip the header line
-                }
-                workouts.Append(line);
-             
-            }
+            fileContent = reader.ReadToEnd();
         }
+
+        int index = fileContent.IndexOf(keyword, StringComparison.OrdinalIgnoreCase);
+        if (index == -1)
+            throw new ArgumentException($"Keyword '{keyword}' not found in the file.");
+
+        int endIndex = fileContent.IndexOf("\n", index);
+        if (endIndex == -1)
+            endIndex = fileContent.Length; // If no newline is found, read till the end of the file
+
+        string workouts = fileContent.Substring(endIndex + 1);
+
         return SplitWorkouts(workouts.ToString());
     }
 
     internal static string[] SplitWorkouts(string workouts)
     {
         string workoutsClean = RemoveFirstLine(workouts);
-        return workoutsClean.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+        return workoutsClean.Split(new[] { "\r\n\r\n", "\n\n", "\r\r" }, StringSplitOptions.RemoveEmptyEntries);
     }
 
     internal static string RemoveFirstLine(string input)
@@ -123,13 +116,15 @@ public class WorkoutDataParser : IWorkoutDataParser
         var parsedSets = new List<Set>();
         foreach (var line in setLines)
         {
-            var parts = line.Split(',');
+
+            var parts = line.Replace("\"", "").Split(',');
             if (parts.Length < 4)
-                throw new ArgumentException("Invalid set format. Expected 'ExerciseName,SetNR,Repetitions,Weight' format.");
-            string exerciseName = parts[0].Trim();
-            int setNR = int.Parse(parts[1].Trim());
-            int repetitions = int.Parse(parts[2].Trim());
-            float weight = float.Parse(parts[3].Trim());
+                continue;
+
+            string exerciseName = parts[1].Trim();
+            int setNR = int.Parse(parts[3].Trim());
+            int repetitions = int.Parse(parts[5].Trim());
+            float weight = float.Parse(parts[7].Trim());
             parsedSets.Add(new Set(exerciseName, setNR, repetitions, weight));
         }
         return parsedSets.ToArray();
