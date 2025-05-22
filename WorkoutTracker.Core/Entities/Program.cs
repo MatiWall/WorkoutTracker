@@ -1,9 +1,8 @@
-namespace WorkoutTracker.Core.Models {
+namespace WorkoutTracker.Core.Entities;
 
-   public class DimProgram{
-        public string ID {get;set;}
-        public required string Name {get; set;}
-        public string? Notes {get; set;}
-   } 
+public class DimProgram{
+    public int ID {get;set;}
+    public required string Name {get; set;}
+    public string? Notes {get; set;}
+} 
 
-}

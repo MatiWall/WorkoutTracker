@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.EntityFrameworkCore;
-using WorkoutTracker.DataBase.Models;
+using WorkoutTracker.Core.Entities;
 
 /*
 class Program {
@@ -52,26 +52,7 @@ using (var scope = app.Services.CreateScope())
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
         //context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
-        var exercise = new DimExercise{
-               Name="Standing Biceps Curls" 
-            };
-
-        context.DimExercise.Add(exercise);
-    
-        context.SaveChanges();
-
-        var allExercises = context.DimExercise.ToList();
-
-        foreach(var ex in allExercises){
-
-            Console.WriteLine($"ID {ex.ID} and Name {ex.Name}");
-        }
-
-        var entities = context.Model.GetEntityTypes();
-        foreach (var entityType in entities){
-                Console.WriteLine($"{entityType.GetTableName()}");
-        }
-        
+       
         Console.WriteLine("Database created");
     }
     catch (Exception ex){

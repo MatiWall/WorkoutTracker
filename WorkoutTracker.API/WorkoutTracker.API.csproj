@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WorkoutTracker.Database\WorkoutTracker.Core.csproj" />
+    <ProjectReference Include="..\WorkoutTracker.Core\WorkoutTracker.Core.csproj" />
   </ItemGroup>
 
 </Project>

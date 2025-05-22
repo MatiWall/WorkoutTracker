@@ -28,5 +28,6 @@ public class WorkoutDataParserTest
         Assert.Equal(2, 2);
         // Assert
         // Output will be visible in the test results
+
     }
 }

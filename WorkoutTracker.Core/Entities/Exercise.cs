@@ -1,15 +1,13 @@
 
 
-namespace WorkoutTracker.Core.Models
+namespace WorkoutTracker.Core.Entities;
+
+
+public class DimExercise
 {
 
-    public class DimExercise
-    {
+    public int ID { get; set; }
 
-        public string ID { get; set; }
-
-        public required string Name { get; set; }
-
-    }
+    public required string Name { get; set; }
 
 }

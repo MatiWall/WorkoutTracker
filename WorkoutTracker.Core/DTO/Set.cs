@@ -9,10 +9,10 @@ namespace WorkoutTracker.Core.DTO
     public class Set
     {
         public string ExerciseName { get; set; } = string.Empty;
-        public int? SetNR { get; set; }
-        public int? Repetitions { get; set; }
+        public int SetNR { get; set; }
+        public int Repetitions { get; set; }
 
-        public float? Weight { get; set; }
+        public float Weight { get; set; }
 
 
         public Set(string ExerciseName, int SetNR, int Repetitions, float Weight) {

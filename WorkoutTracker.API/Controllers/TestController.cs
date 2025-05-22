@@ -1,5 +1,9 @@
 // filepath: c:\Users\MatiW\Documents\projects\WorkoutTracker\DataBase\Controllers\WeatherController.cs
 using Microsoft.AspNetCore.Mvc;
+using WorkoutTracker.API.DBInserter;
+using WorkoutTracker.Core.DTO;
+using WorkoutTracker.Core.Parsers;
+
 
 namespace WorkoutTracker.Controllers {
     
@@ -7,7 +11,14 @@ namespace WorkoutTracker.Controllers {
 [Route("/data")]
 public class WorkoutDataControllers : ControllerBase
 {
-    [HttpGet]
+        private readonly DBInserter _dbInserter;
+
+        public WorkoutDataControllers(DBInserter dbInserter)
+        {
+                        _dbInserter = dbInserter;
+        }
+
+        [HttpGet]
     public IActionResult Get()
     {
         return Ok(new { Message = "Hello, API!" });
@@ -21,8 +32,15 @@ public class WorkoutDataControllers : ControllerBase
             return BadRequest("No file uploaded.");
         }
 
-        // Process the uploaded file
-        return Ok(new { Message = "File uploaded successfully!" });
+        WorkoutDataParser parser = new WorkoutDataParser();
+
+            Workout[] workouts = parser.ParseWorkoutData(file.OpenReadStream());
+
+
+            _dbInserter.Insert(workouts);
+
+            // Process the uploaded file
+            return Ok(new { Message = "File uploaded successfully!" });
     }
 }
 

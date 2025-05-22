@@ -1,12 +1,13 @@
 
-namespace WorkoutTracker.Core.Models {
+namespace WorkoutTracker.Core.Entities;
 
-    public class Set {
+public class Set {
 
-        public string ID {get; set;}
+        public int ID {get; set;}
 
         public required int WorkoutID {get; set;}
         public required int ExerciseID {get; set;}
+        public required int SetNR {get; set;}
         public required int Repetitions {get; set;}
 
         public float Weight {get; set;} 
@@ -14,6 +15,4 @@ namespace WorkoutTracker.Core.Models {
         public string? Note {get; set;}
 
         
-    }
-
 }
