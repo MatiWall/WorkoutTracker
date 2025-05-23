@@ -25,7 +25,7 @@ public class DBInserter
 		{
 			Workout workoutEntity = new Workout { 
 				Name = workout.Metadata.workoutName, 
-				StartTime = workout.Metadata.date 
+				StartTime = workout.Metadata.date.ToUniversalTime() 
 			};
 
 			_context.FactWorkout.Add(workoutEntity);

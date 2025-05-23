@@ -17,4 +17,6 @@ public class ApplicationDBContext : DbContext
     public DbSet<DimProgram> DimProgram { get; set; }
     public DbSet<Workout> FactWorkout { get; set; }
     public DbSet<DimExercise> DimExercise { get; set; }
+
+    public DbSet<BodyWeight> FactBodyWeight { get; set; }
 }

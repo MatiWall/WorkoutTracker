@@ -5,27 +5,29 @@ using WorkoutTracker.Core.DTO;
 using WorkoutTracker.Core.Parsers;
 
 
-namespace WorkoutTracker.Controllers {
-    
+namespace WorkoutTracker.Controllers;
+
+
 [ApiController]
 [Route("/data")]
 public class WorkoutDataControllers : ControllerBase
 {
-        private readonly DBInserter _dbInserter;
+    private readonly DBInserter _dbInserter;
 
-        public WorkoutDataControllers(DBInserter dbInserter)
-        {
-                        _dbInserter = dbInserter;
-        }
+    public WorkoutDataControllers(DBInserter dbInserter)
+    {
+        _dbInserter = dbInserter;
+    }
 
-        [HttpGet]
+    [HttpGet]
     public IActionResult Get()
     {
         return Ok(new { Message = "Hello, API!" });
     }
 
     [HttpPost]
-    public IActionResult UploadFile([FromForm] IFormFile file)
+    [Consumes("multipart/form-data")]
+    public IActionResult UploadFile(IFormFile file)
     {
         if (file == null || file.Length == 0)
         {
@@ -34,15 +36,12 @@ public class WorkoutDataControllers : ControllerBase
 
         WorkoutDataParser parser = new WorkoutDataParser();
 
-            Workout[] workouts = parser.ParseWorkoutData(file.OpenReadStream());
+        Workout[] workouts = parser.ParseWorkoutData(file.OpenReadStream());
 
 
-            _dbInserter.Insert(workouts);
+        _dbInserter.Insert(workouts);
 
-            // Process the uploaded file
-            return Ok(new { Message = "File uploaded successfully!" });
+        // Process the uploaded file
+        return Ok(new { Message = "File uploaded successfully!" });
     }
-}
-
-
 }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Microsoft.EntityFrameworkCore;
 using WorkoutTracker.Core.Entities;
+using WorkoutTracker.API.DBInserter;
 
 /*
 class Program {
@@ -41,7 +42,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseNpgsql("Host=192.168.0.11;Port=5432;Database=Workout;Username=postgres;Password=postgres"));
 builder.Services.AddOpenApi();
-
+builder.Services.AddScoped<DBInserter>();
 
 var app = builder.Build();
 
@@ -50,7 +51,7 @@ using (var scope = app.Services.CreateScope())
     try{
         Console.WriteLine("Creating database");
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDBContext>();
-        //context.Database.EnsureDeleted();
+        context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
        
         Console.WriteLine("Database created");
